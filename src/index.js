@@ -5,12 +5,20 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { pokemonsReudcers } from './reducers/pokemons'; 
 import { Provider } from 'react-redux';
-import { legacy_createStore as createStore } from 'redux';
+import {
+  applyMiddleware,
+  legacy_createStore as createStore,
+  compose,
+} from "redux";
+import { featuring, logger } from "./middlewares";
 
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
-const store = createStore(pokemonsReudcers);
+const composedEhnancers = compose(
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  applyMiddleware(logger, featuring)
+);
+const store = createStore(pokemonsReudcers, composedEhnancers);
 
 root.render(
   <React.StrictMode>

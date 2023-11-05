@@ -3,45 +3,52 @@ import './App.css';
 import {Col} from "antd";
 import Searcher from "./components/Searcher";
 import PokemonList from './components/PokemonList';
-import { useEffect, useState } from 'react';
-import {getPokemons}  from './api';
-import {connect} from "react-redux";
-import {setPokemons as setPokemonsActions}  from "./actions";
+import { useEffect } from "react";
+import { getPokemonDetails, getPokemons } from "./api";
+import { setPokemons } from "./actions";
+import useSelection from "antd/es/table/hooks/useSelection";
+import { useDispatch, useSelector } from "react-redux";
 
-
-function App({pokemons, setPokemons}) {
-  console.log("🚀 ~ file: App.js:13 ~ App ~ pokemons:", pokemons)
+function App() {
   //const [pokemons, setPokemons] =useState([]);
+  const pokemons = useSelector((state) => state.pokemons);
 
-  useEffect(()=>{
+  const dispatch = useDispatch();
+
+  useEffect(() => {
     const fetchPokemon = async () => {
       const list = await getPokemons();
-      setPokemons(list);
+
+      const pokemonDetailed = await Promise.all(
+        list.map((pokemon) => getPokemonDetails(pokemon))
+      );
+
+      dispatch(setPokemons(pokemonDetailed));
     };
 
-    const list = fetchPokemon()     
+    fetchPokemon();
   }, []);
-
 
   return (
     <div className="App">
-      <Col span={4} offset={10}>
-        <img  src={logo} alt ="Pokedux"></img>
+      <Col
+        span={4}
+        offset={10}
+      >
+        <img
+          src={logo}
+          alt="Pokedux"
+        ></img>
       </Col>
-      <Col span="8" offset="8">
-      <Searcher/>
+      <Col
+        span="8"
+        offset="8"
+      >
+        <Searcher />
       </Col>
-    <PokemonList pokemons={pokemons}/>
+      <PokemonList pokemons={pokemons} />
     </div>
   );
 }
 
-const mapStateToProps =(state) => ({
- pokemons: state.pokemons
-});
-
-const mapDispachToProps = (dispatch => ({
-  setPokemons:  (value) => dispatch(setPokemonsActions(value)),
-}));
-
-export default connect(mapStateToProps, mapDispachToProps)(App);
+export default App;
