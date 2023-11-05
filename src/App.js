@@ -5,7 +5,7 @@ import Searcher from "./components/Searcher";
 import PokemonList from './components/PokemonList';
 import { useEffect } from "react";
 import { getPokemonDetails, getPokemons } from "./api";
-import { setPokemons } from "./actions";
+import { getPokemonsWithDetails, setPokemons } from "./actions";
 import useSelection from "antd/es/table/hooks/useSelection";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,11 +19,11 @@ function App() {
     const fetchPokemon = async () => {
       const list = await getPokemons();
 
-      const pokemonDetailed = await Promise.all(
-        list.map((pokemon) => getPokemonDetails(pokemon))
-      );
+      // const pokemonDetailed = await Promise.all(
+      //   list.map((pokemon) => getPokemonDetails(pokemon))
+      // );
 
-      dispatch(setPokemons(pokemonDetailed));
+      dispatch(getPokemonsWithDetails(list));
     };
 
     fetchPokemon();

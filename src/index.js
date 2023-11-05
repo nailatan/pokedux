@@ -10,14 +10,14 @@ import {
   legacy_createStore as createStore,
   compose,
 } from "redux";
+import thunk from "redux-thunk";
 import { featuring, logger } from "./middlewares";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const composedEhnancers = compose(
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  applyMiddleware(logger, featuring)
-);
+const composeAlt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const composedEhnancers = composeAlt(applyMiddleware(thunk, logger, featuring));
 const store = createStore(pokemonsReudcers, composedEhnancers);
 
 root.render(
