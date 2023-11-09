@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { pokemonsReudcers } from './reducers/pokemons'; 
+import reportWebVitals from "./reportWebVitals";
 import { Provider } from 'react-redux';
 import {
   applyMiddleware,
@@ -12,13 +11,14 @@ import {
 } from "redux";
 import thunk from "redux-thunk";
 import { featuring, logger } from "./middlewares";
+import rootReducer from "./reducers/rootReducer";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const composeAlt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const composedEhnancers = composeAlt(applyMiddleware(thunk, logger, featuring));
-const store = createStore(pokemonsReudcers, composedEhnancers);
+const store = createStore(rootReducer, composedEhnancers);
 
 root.render(
   <React.StrictMode>
